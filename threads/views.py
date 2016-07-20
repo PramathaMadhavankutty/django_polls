@@ -8,6 +8,7 @@ from django.template.context_processors import csrf
 from .forms import ThreadForm, PostForm
 from django.forms import formset_factory
 from polls.forms import PollSubjectForm, PollForm
+from polls.models import PollSubject
 # Create your views here.
 def forum(request):
     return render(request, 'forum/forum.html',{'subjects':Subject.objects.all()})
@@ -25,7 +26,10 @@ def new_thread(request, subject_id):
         post_form = PostForm(request.POST)
         poll_form = PollForm(request.POST)
         poll_subject_formset = poll_subject_formset(request.POST)
-        if thread_form.is_valid() and post_form.is_valid() and poll_form.is_valid() and poll_subject_formset.is_valid():
+        if thread_form.is_valid() and post_form.is_valid()\
+                and poll_form.is_valid()\
+                and poll_subject_formset.is_valid()\
+                and request.POST.get('is_a_poll',None):
             thread = thread_form.save(False)
             thread.subject = subject
             thread.user = request.user
@@ -134,3 +138,20 @@ def delete_post(request, post_id):
    messages.success(request, "Your post was deleted!")
  
    return redirect(reverse('thread', args={thread_id}))
+
+@login_required
+def thread_vote(request, thread_id, subject_id):
+    thread = Thread.objects.get(id=thread_id)
+
+    subject = thread.poll.votes.filter(user=request.user)
+
+    if subject:
+        messages.error(request,'Oh! it seems you already voted on this!...')
+        return redirect(reverse('thread',args={thread_id}))
+    subject = PollSubject.objects.get(id=subject_id)
+
+    subject.votes.create(poll=subject.poll, user=request.user)
+
+    messages.success(request, 'We\'ve registered your vote!')
+
+    return redirect(reverse('thread', args=thread_id))
