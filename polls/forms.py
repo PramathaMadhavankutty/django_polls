@@ -20,4 +20,4 @@ class PollSubjectForm(forms.ModelForm):
         model = PollSubject
         fields = ['name']
 
-        
+
