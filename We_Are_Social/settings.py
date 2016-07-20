@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'products',
     'magazines',
     'threads',
+    'polls',
 
 
 ]
