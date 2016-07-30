@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django_forms_bootstrap',
     'paypal.standard.ipn',
+    'registration',
     'debug_toolbar',
     'tinymce',
     'emoticons',
@@ -140,10 +141,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = ''
 
-STATIC_FILES_DIRS = (
-    os.path.join(BASE_DIR, "static"), # static directory at project level
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),  # static directory at project level
 )
-
 
 
 SITE_ID = 4
@@ -153,13 +153,14 @@ AUTH_USER_MODEL = 'accounts.User'
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',
                            'accounts.backends.EmailAuth',)
 
-#Paypal Settings
+
+# Pay pal Settings
 
 SITE_URL = 'http://127.0.0.1:8000'
 PAYPAL_NOTIFY_URL = ' http://127.0.0.1/a-very-hard-to-guess-url/'
 PAYPAL_RECEIVER_EMAIL = 'pramatha.madhavankutty@yahoo.com'
 
 
-#Tinymce settings
+# Tiny mce settings
 
 TINYMCE_JS_ROOT = os.path.join(BASE_DIR, "static", "js", "tinymce", "tinymce.min.js")
